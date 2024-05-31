@@ -1,11 +1,37 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const path = require('path');
-
 const app = express();
 const port = 3000;
+const server = http.createServer(app);
+const io = socketIo(server);
+
+const { cpuTemperature, batteryPercentage, cpuUsage, ramUsage } = require('./info/stats.js')
 
 app.use(express.static(path.join(__dirname, 'served')));
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+io.on('connection', (socket) => {
+    console.log('[*] New frontend connection!');
+
+    socket.on('saveSettings', (data) => {
+        console.log('Settings JSON:', data);
+    });
+
+    socket.on('requestStats' , async () => {
+        console.log('[?] Frontend requested stats, sending data...');
+        const stats = {
+            cpuTemperature: await cpuTemperature(),
+            batteryPercentage: await batteryPercentage(),
+            cpuUsage: await cpuUsage(),
+            ramUsage: await ramUsage()
+        };
+        socket.emit('stats', stats);
+    });
+
+    socket.emit('hello', 'hi im server');
+});
+
+server.listen(port, () => {
+    console.log(`IRL streamer is running on port ${port}`);
 });

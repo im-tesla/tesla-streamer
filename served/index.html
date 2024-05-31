@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <title>IRL Streamer</title>
 </head>
 <body class="bg-gray-200 w-full h-screen">
-    <div class="h-screen flex items-center justify-center">
+    <div id="waiting-for-connection" class="h-screen flex items-center justify-center">
         <div class="bg-gray-100 p-5 drop-shadow-xl rounded-box">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
@@ -20,25 +20,25 @@
             </div>
         </div>
     </div>
-    <main class="hidden">
+    <main id="main-content" class="hidden">
         <div id="stats">
             <div class="grid grid-cols-2 gap-4 p-4">
                 <div class="bg-gray-100 rounded-box drop-shadow-xl p-4">
                     <i class="fas fa-thermometer-half mr-1"></i>
-                    <span id="backpack-data-temp">Temp: <span class="font-semibold">36°C</span></span>
+                    <span>Temp: <span id="backpack-data-temp" class="font-semibold">36°C</span></span>
                 </div>
                 <div class="bg-gray-100 rounded-box drop-shadow-xl p-4 flex items-center">
                     <i class="fas fa-microchip mr-1"></i>
-                    <span id="backpack-data-cpu-usage">CPU: <span class="font-semibold">8%</span></span>
+                    <span>CPU: <span id="backpack-data-cpu-usage" class="font-semibold">8%</span></span>
                     <i class="fas fa-gear ml-auto active:animate-spin" onclick="settings.showModal()"></i>
                 </div>
                 <div class="bg-gray-100 rounded-box drop-shadow-xl p-4">
                     <i class="fas fa-memory mr-1"></i>
-                    <span id="backpack-data-ram-usage">RAM: <span class="font-semibold">13%</span></span>
+                    <span>RAM: <span id="backpack-data-ram-usage" class="font-semibold">13%</span></span>
                 </div>
                 <div class="bg-gray-100 rounded-box drop-shadow-xl p-4">
                     <i class="fas fa-battery-half mr-1"></i>
-                    <span id="backpack-data-battery-percentage">Battery: <span class="font-semibold">83%</span></span>
+                    <span>Battery: <span id="backpack-data-battery-percentage" class="font-semibold">83%</span></span>
                 </div>
             </div>
         </div>
@@ -118,5 +118,6 @@
             </div>
         </div>
     </dialog>
+    <script src="script.js"></script>
 </body>
 </html>
