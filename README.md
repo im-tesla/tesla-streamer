@@ -9,9 +9,9 @@ IRL streaming backpack software optimized for MacBooks, delivering seamless live
 - [x] Ultra low battery consumption
 
 ## Requirements
-- [x] macOS 10.15 or later
+- [x] macOS 10.13 or later
 - [x] Recommended: Apple Silicon Mac (M1 or later) for best performance and battery life
-- [x] A good internet connection
+- [x] A good internet connection (LTE/5G)
 - [x] A computer at house that will receive the stream, and eventually broadcast it to Twitch, YouTube, etc.
 
 ## Preview of mobile panel
