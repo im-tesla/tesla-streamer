@@ -7,6 +7,7 @@ IRL streaming backpack software optimized for MacBooks, delivering seamless live
 - [x] AAC and Opus audio encoding
 - [x] Low latency streaming
 - [x] Ultra low battery consumption
+- [x] Recording live-streams 
 
 ## Requirements
 - [x] macOS 10.13 or later
