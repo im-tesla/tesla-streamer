@@ -57,8 +57,8 @@
                     <h1 class="text-2xl font-semibold">Controls</h1>
                     <p class="text-sm">Have a full control over your stream</p>
                     <div class="grid grid-cols-1 gap-4 mt-4">
-                        <button class="btn btn-outline btn-neutral">Start streaming to relay</button>
-                        <button class="btn btn-outline btn-error">Restart system</button>
+                        <button onclick="startStream()" class="btn btn-outline btn-neutral">Start streaming to relay</button>
+                        <button onclick="areYouSure.showModal()" class="btn btn-outline btn-error">Restart system</button>
                     </div>
                 </div>
             </div>
@@ -118,6 +118,19 @@
             </div>
         </div>
     </dialog>
-    <script src="script.js"></script>
+    <dialog id="areYouSure" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Are you sure?</h3>
+            <p class="text-sm mt-2">This action will restart the whole script and stop the stream</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-error" onclick="restartSystem()">Yes, restart system</button>
+                    <button class="btn" onclick="areYouSure.close()">No, cancel</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+    <script src="alert.js"></script>
+    <script src="sockets.js"></script>
 </body>
 </html>

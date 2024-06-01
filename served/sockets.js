@@ -14,7 +14,20 @@ function onSettingsSave() {
     }
 
     socket.emit('settings', data);
+    showAlert('Settings saved successfully!', 'success');
 }
+
+function startStream() {
+    const receiverIP = document.getElementById('receiverIP').value;
+    showAlert('Establishing connection with ' + receiverIP + '...', 'info');
+    socket.emit('startStream');
+}
+
+function restartSystem() {
+    socket.emit('restartSystem');
+    showAlert('Restarting system...', 'error');
+}
+
 socket.on('hello', (data) => {
     console.log('Received welcoming message from server:', data);
     socket.emit('requestStats');
@@ -41,6 +54,18 @@ socket.on('loadSettings', (data) => {
     document.getElementById('receiverIP').value = data.receiverIP;
 })
 
+socket.on('streamInfo', (data) => {
+   switch (data) {
+         case 'success': {
+              showAlert('Stream started successfully!', 'success');
+              break;
+         }
+         case 'error': {
+              showAlert('Stream could not be started!', 'error');
+              break;
+         }
+   }
+});
 setInterval(() => {
     socket.emit('requestStats');
 }, 3000);

@@ -38,6 +38,16 @@ io.on('connection', (socket) => {
         saveConfig(data);
     })
 
+    socket.on('startStream', () => {
+        console.log('[+] Starting stream...');
+
+        //heres the magic
+
+        setTimeout(() => {
+            socket.emit('streamInfo', 'success');
+        }, 3000);
+    });
+
     socket.emit('hello', 'hi im server');
 });
 
