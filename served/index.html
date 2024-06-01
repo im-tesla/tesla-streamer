@@ -73,7 +73,7 @@
                         <label class="label">
                             <span class="font-semibold">Stream resolution</span>
                         </label>
-                        <select class="select select-bordered w-full">
+                        <select id="resolution" class="select select-bordered w-full">
                             <option>1280x720</option>
                             <option>1920x1080</option>
                             <option>2560x1440</option>
@@ -84,7 +84,7 @@
                         <label class="label">
                             <span class="font-semibold">Stream FPS</span>
                         </label>
-                        <select class="select select-bordered w-full">
+                        <select id="fps" class="select select-bordered w-full">
                             <option>24</option>
                             <option>30</option>
                             <option>60</option>
@@ -94,7 +94,7 @@
                         <label class="label">
                             <span class="font-semibold">Stream bitrate</span>
                         </label>
-                        <input type="range" min="0" max="10000" value="2500" class="range" step="25" />
+                        <input id="bitrate" type="range" min="0" max="10000" value="2500" class="range" step="25" />
                         <div class="w-full flex justify-between text-xs px-2 mt-2">
                             <span>0</span>
                             <span>2500</span>
@@ -107,13 +107,13 @@
                         <label class="label">
                             <span class="font-semibold">Receiver IP</span>
                         </label>
-                        <input type="text" class="input input-bordered w-full" placeholder="Input receiver IP">
+                        <input type="text" id="receiverIP" class="input input-bordered w-full" placeholder="Input receiver IP">
                     </div>
                 </div>
             </div>
             <div class="modal-action">
                 <form method="dialog">
-                    <button class="btn">Save</button>
+                    <button class="btn" onclick="onSettingsSave()">Save</button>
                 </form>
             </div>
         </div>

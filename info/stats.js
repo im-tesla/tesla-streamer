@@ -3,8 +3,8 @@ const exec = util.promisify(require('child_process').exec);
 var os= require('os');
 
 async function cpuTemperature() {
-    const { stdout } = await exec(__dirname + '/osx-cpu-temp');
-    return stdout.replace('\n', '');
+    const { stdout } = await exec(__dirname + '/../wrapper/osx/osx-cpu-temp');
+    return parseInt(stdout) + "°C";
 }
 
 async function cpuUsage() {

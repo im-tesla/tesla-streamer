@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 const server = http.createServer(app);
 const io = socketIo(server);
-
+const { loadConfig, saveConfig } = require('./settings/config.js');
 const { cpuTemperature, batteryPercentage, cpuUsage, ramUsage } = require('./info/stats.js')
 
 app.use(express.static(path.join(__dirname, 'served')));
@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('requestStats' , async () => {
-        console.log('[?] Frontend requested stats, sending data...');
+        //console.log('[?] Frontend requested stats, sending data...');
         const stats = {
             cpuTemperature: await cpuTemperature(),
             batteryPercentage: await batteryPercentage(),
@@ -28,6 +28,15 @@ io.on('connection', (socket) => {
         };
         socket.emit('stats', stats);
     });
+
+    socket.on('requestSettings', async() => {
+        socket.emit('loadSettings', loadConfig());
+    })
+
+    socket.on('settings', async (data) => {
+        console.log("[+] Received new settings ", data);
+        saveConfig(data);
+    })
 
     socket.emit('hello', 'hi im server');
 });

@@ -1,8 +1,24 @@
 const socket = io();
 
+function onSettingsSave() {
+    const resolution = document.getElementById('resolution').selectedIndex;
+    const fps = document.getElementById('fps').selectedIndex;
+    const bitrate = document.getElementById('bitrate').value;
+    const receiverIP = document.getElementById('receiverIP').value;
+
+    const data = {
+        resolution,
+        fps,
+        bitrate,
+        receiverIP
+    }
+
+    socket.emit('settings', data);
+}
 socket.on('hello', (data) => {
     console.log('Received welcoming message from server:', data);
     socket.emit('requestStats');
+    socket.emit('requestSettings')
     setInterval(() => {
         document.getElementById('waiting-for-connection').style.display = 'none';
         document.getElementById('main-content').style.display = 'inherit';
@@ -10,13 +26,21 @@ socket.on('hello', (data) => {
 });
 
 socket.on('stats', (data) => {
-    console.log('Received stats from server:', data);
+    //console.log('Received stats from server:', data);
     document.getElementById('backpack-data-temp').innerText = data.cpuTemperature;
     document.getElementById('backpack-data-cpu-usage').innerText = data.cpuUsage;
     document.getElementById('backpack-data-ram-usage').innerText = data.ramUsage;
     document.getElementById('backpack-data-battery-percentage').innerText = data.batteryPercentage;
 });
 
+socket.on('loadSettings', (data) => {
+    console.log(data);
+    document.getElementById('resolution').selectedIndex = data.resolution;
+    document.getElementById('fps').selectedIndex = data.fps;
+    document.getElementById('bitrate').value = data.bitrate;
+    document.getElementById('receiverIP').value = data.receiverIP;
+})
+
 setInterval(() => {
     socket.emit('requestStats');
-}, 5000);
+}, 3000);
