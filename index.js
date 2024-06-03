@@ -8,6 +8,8 @@ const server = http.createServer(app);
 const io = socketIo(server);
 const { loadConfig, saveConfig } = require('./settings/config.js');
 const { cpuTemperature, batteryPercentage, cpuUsage, ramUsage } = require('./info/stats.js')
+const { exec } = require('child_process');
+const { getLatestFrame } = require('./preview/preview.js');
 
 app.use(express.static(path.join(__dirname, 'served')));
 
@@ -41,11 +43,37 @@ io.on('connection', (socket) => {
     socket.on('startStream', () => {
         console.log('[+] Starting stream...');
 
-        //heres the magic
+        const streamProcess = exec('gst-launch-1.0 avfvideosrc ! video/x-raw,framerate=30/1 ! tee name=t t. ! queue ! videoconvert ! autovideosink t. ! queue ! videorate ! "video/x-raw,framerate=1/2" ! jpegenc ! multifilesink location="preview/frames/frame%05d.jpg"');
+        streamProcess.stdout.on('data', (data) => {
+            console.log(data);
+            if (data.includes('Pipeline is live')) {
+                setTimeout(() => {
+                    socket.emit('streamInfo', 'success');
+                },3000); // 3 seconds to prepare and make sure the stream is running
+            }
+        });
+        streamProcess.stderr.on('data', (data) => {
+            console.error(data);
+        });
+    });
 
-        setTimeout(() => {
-            socket.emit('streamInfo', 'success');
-        }, 3000);
+    socket.on('stopStream', () => {
+        console.log('[+] Stopping stream...');
+        const stopStreamProcess = exec('killall gst-launch-1.0');
+        stopStreamProcess.stdout.on('data', (data) => {
+            console.log(data);
+            if (data.includes('No matching processes')) {
+                socket.emit('streamInfo', 'success');
+            }
+        });
+        stopStreamProcess.stderr.on('data', (data) => {
+            console.error(data);
+        });
+    });
+
+    socket.on('getPreview', () => {
+        const frame = getLatestFrame();
+        socket.emit('preview', frame);
     });
 
     socket.emit('hello', 'hi im server');

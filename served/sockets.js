@@ -1,5 +1,7 @@
 const socket = io();
 
+var isStreaming = false;
+
 function onSettingsSave() {
     const resolution = document.getElementById('resolution').selectedIndex;
     const fps = document.getElementById('fps').selectedIndex;
@@ -26,6 +28,25 @@ function startStream() {
 function restartSystem() {
     socket.emit('restartSystem');
     showAlert('Restarting system...', 'error');
+}
+
+function streamStarted() {
+    isStreaming = true;
+    document.getElementById('startStreamButton').classList.remove('btn-neutral');
+    document.getElementById('startStreamButton').classList.add('btn-primary');
+    document.getElementById('startStreamButton').setAttribute('onclick', 'stopStreamAreYouSure.showModal()');
+    document.getElementById('startStreamButton').innerText = 'Stop streaming to relay';
+}
+
+function stopStream() {
+    socket.emit('stopStream');
+    isStreaming = false;
+    document.getElementById('startStreamButton').classList.remove('btn-primary');
+    document.getElementById('startStreamButton').classList.add('btn-neutral');
+    document.getElementById('startStreamButton').setAttribute('onclick', 'startStream()');
+    document.getElementById('startStreamButton').innerText = 'Start streaming to relay';
+    document.getElementById('streamPreview').src = 'placeholder-1280-720.jpg';
+    showAlert('Stream stopped successfully!', 'error');
 }
 
 socket.on('hello', (data) => {
@@ -57,6 +78,7 @@ socket.on('loadSettings', (data) => {
 socket.on('streamInfo', (data) => {
    switch (data) {
          case 'success': {
+              streamStarted();
               showAlert('Stream started successfully!', 'success');
               break;
          }
@@ -66,6 +88,16 @@ socket.on('streamInfo', (data) => {
          }
    }
 });
+
+socket.on('preview', (data) => {
+    document.getElementById('streamPreview').src = 'data:image/jpeg;base64,' + data;
+})
 setInterval(() => {
     socket.emit('requestStats');
 }, 3000);
+
+setInterval(() => {
+    if (isStreaming) {
+        socket.emit('getPreview');
+    }
+}, 2000)
