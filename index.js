@@ -10,6 +10,7 @@ const { loadConfig, saveConfig } = require('./settings/config.js');
 const { cpuTemperature, batteryPercentage, cpuUsage, ramUsage } = require('./info/stats.js')
 const { exec } = require('child_process');
 const { getLatestFrame } = require('./preview/preview.js');
+const {getResolutionX, getResolutionY, getCameraIndex, getFrameRate, getBitrate, getReceiverIP} = require("./settings/config");
 
 app.use(express.static(path.join(__dirname, 'served')));
 
@@ -42,8 +43,17 @@ io.on('connection', (socket) => {
 
     socket.on('startStream', () => {
         console.log('[+] Starting stream...');
+        const resolutionX = getResolutionX();
+        const resolutionY = getResolutionY();
+        const cameraIndex = getCameraIndex();
+        const streamFPS = getFrameRate();
+        const bitrate = getBitrate();
+        const receiverIP = getReceiverIP();
 
-        const streamProcess = exec('gst-launch-1.0 avfvideosrc ! video/x-raw,framerate=30/1 ! tee name=t t. ! queue ! videoconvert ! autovideosink t. ! queue ! videorate ! "video/x-raw,framerate=1/2" ! jpegenc ! multifilesink location="preview/frames/frame%05d.jpg"');
+
+        //base command
+        const streamProcess = exec('gst-launch-1.0 avfvideosrc ! video/x-raw,framerate=30/1 ! tee name=t t. ! queue ! videoconvert ! videorate ! "video/x-raw,framerate=1/2" ! jpegenc ! multifilesink location="preview/frames/frame%05d.jpg" t. ! queue ! fakesink');
+
         streamProcess.stdout.on('data', (data) => {
             console.log(data);
             if (data.includes('Pipeline is live')) {
@@ -52,6 +62,7 @@ io.on('connection', (socket) => {
                 },3000); // 3 seconds to prepare and make sure the stream is running
             }
         });
+
         streamProcess.stderr.on('data', (data) => {
             console.error(data);
         });

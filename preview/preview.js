@@ -1,13 +1,3 @@
-//in ./preview/frames we got the images
-//the image are took each 2 seconds
-//frame00000.jpg
-//frame00001.jpg
-//frame00002.jpg
-//etc..
-//each 3 seconds we should read the latest image, send it to the client and remove all of them
-//to save space
-//we should create a function that returns base64 of latest preview image
-
 const fs = require('fs');
 const path = require('path');
 
@@ -32,3 +22,6 @@ function removeFrames() {
 module.exports = {
     getLatestFrame
 }
+
+//will it going to be safe for disk, constant writing and deleting files?
+//i'm not sure, but I will try to find a better solution for this.

@@ -7,12 +7,14 @@ function onSettingsSave() {
     const fps = document.getElementById('fps').selectedIndex;
     const bitrate = document.getElementById('bitrate').value;
     const receiverIP = document.getElementById('receiverIP').value;
+    const cameraIndex = document.getElementById('cameraIndex').value;
 
     const data = {
         resolution,
         fps,
         bitrate,
-        receiverIP
+        receiverIP,
+        cameraIndex
     }
 
     socket.emit('settings', data);

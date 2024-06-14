@@ -66,6 +66,11 @@ function getResolutionX() {
     }
 }
 
+function getCameraIndex() {
+    const config = loadConfig();
+    return config.camera || 0;
+}
+
 module.exports = {
     loadConfig,
     saveConfig,
@@ -74,5 +79,6 @@ module.exports = {
     getBitrate,
     getReceiverIP,
     getResolutionX,
-    getResolutionY
+    getResolutionY,
+    getCameraIndex
 }
