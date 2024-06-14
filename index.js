@@ -50,7 +50,6 @@ io.on('connection', (socket) => {
         const bitrate = getBitrate();
         const receiverIP = getReceiverIP();
 
-
         //base command
         const streamProcess = exec('gst-launch-1.0 avfvideosrc ! video/x-raw,framerate=30/1 ! tee name=t t. ! queue ! videoconvert ! videorate ! "video/x-raw,framerate=1/2" ! jpegenc ! multifilesink location="preview/frames/frame%05d.jpg" t. ! queue ! fakesink');
 
